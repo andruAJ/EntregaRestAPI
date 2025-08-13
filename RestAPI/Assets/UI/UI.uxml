@@ -1,3 +1,30 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Style.uss?fileID=7433441132597879392&amp;guid=09588c1c80c4ccf4d8f9fc91142d26f5&amp;type=3#Style" />
+    <ui:VisualElement name="VisualContainer" style="flex-grow: 1; position: relative; flex-direction: row;">
+        <ui:VisualElement name="Character1" style="flex-grow: 1;">
+            <ui:VisualElement name="CharacterPic" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterName" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterSpecies" style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Character2" style="flex-grow: 1;">
+            <ui:VisualElement name="CharacterPic" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterName" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterSpecies" style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Character3" style="flex-grow: 1;">
+            <ui:VisualElement name="CharacterPic" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterName" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterSpecies" style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Character4" style="flex-grow: 1;">
+            <ui:VisualElement name="CharacterPic" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterName" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterSpecies" style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="Character5" style="flex-grow: 1;">
+            <ui:VisualElement name="CharacterPic" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterName" style="flex-grow: 1;" />
+            <ui:VisualElement name="CharacterSpecies" style="flex-grow: 1;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
 </ui:UXML>
