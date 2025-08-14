@@ -3,22 +3,28 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class HTTP_Test : MonoBehaviour
 {
     [SerializeField]
     private int characterId = 102;
 
-    private string APIUrl = "https://my-json-server.typicode.com/manolovillarreal/jsonDB/users/";
+    private string APIUrl = "https://my-json-server.typicode.com/andruAJ/EntregaRestAPI";
     private string RicKandMortyUrl = "https://rickandmortyapi.com/api/character/";
 
-    [SerializeField]
-    private RawImage rawImage;
+    private UIDocument uiDocument;
+
+    private VisualElement rawImage;
+    private string name;
+    private string species;
 
     void Start()
     {
+        uiDocument = GetComponent<UIDocument>();
         StartCoroutine(GetUser(1));
-        StartCoroutine(GetCharacter(characterId));
+        StartCoroutine(GetCharacter(characterId));  
+        rawImage = uiDocument.rootVisualElement.Q("CharacterPic") as VisualElement;
     }
 
     IEnumerator GetUser(int userId)
@@ -91,7 +97,7 @@ public class HTTP_Test : MonoBehaviour
                 // Show results as texture
                 Texture2D texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
                 Debug.Log("Image downloaded successfully");
-                rawImage.texture = texture;
+                rawImage.style.backgroundImage = texture;
             }
             else
             {
