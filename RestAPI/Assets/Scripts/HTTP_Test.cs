@@ -20,51 +20,36 @@ public class HTTP_Test : MonoBehaviour
 
     private UIDocument uiDocument;
 
-    private VisualElement imageChar1;
-    private string nameChar1;
-    private string speciesChar1;
+    private VisualElement[] imageChars;
+    private Label[] nameLabels;
+    private Label[] speciesLabels;
 
     void Start()
     {
         uiDocument = GetComponent<UIDocument>();
-        StartCoroutine(GetUser(1));
-        StartCoroutine(GetCharacter(characterIds));
-        imageChar1 = uiDocument.rootVisualElement.Q("CharacterPic") as VisualElement;
-        characterIds[character1Id, character2Id, character3Id, character4Id, character5Id];
 
-    IEnumerator GetUser(int userId)
-    {
-        UnityWebRequest request = UnityWebRequest.Get(APIUrl + userId);
-        yield return request.SendWebRequest();
-        if (request.result == UnityWebRequest.Result.ConnectionError)
+        characterIds = new int[] { character1Id, character2Id, character3Id, character4Id, character5Id };
+
+        imageChars = new VisualElement[5];
+        nameLabels = new Label[5];
+        speciesLabels = new Label[5];
+
+        for (int i = 0; i < 5; i++)
         {
-            Debug.Log(request.error);
+            imageChars[i] = uiDocument.rootVisualElement.Q($"CharacterPic{i + 1}") as VisualElement;
+            nameLabels[i] = uiDocument.rootVisualElement.Q($"CharacterName{i + 1}") as Label;
+            speciesLabels[i] = uiDocument.rootVisualElement.Q($"CharacterSpecies{i + 1}") as Label;
         }
-        else
+
+        for (int i = 0; i < characterIds.Length; i++)
         {
-            if (request.responseCode == 200)
-            {
-                // Show results as text
-                string json = request.downloadHandler.text;
-                Debug.Log(json);
-
-            }
-            else
-            {
-                string mensaje = "status:" + request.responseCode;
-                mensaje += "\nError: " + request.error;
-                Debug.Log(mensaje);
-            }
-
+            StartCoroutine(GetCharacter(characterIds[i], i));
         }
-    }
-    IEnumerator GetCharacter(int[] characterIds)
-    {
-        foreach (int id in characterIds)
+
+        IEnumerator GetUser(int userId)
         {
-            UnityWebRequest request = UnityWebRequest.Get(RicKandMortyUrl + id);
+            UnityWebRequest request = UnityWebRequest.Get(APIUrl + userId);
             yield return request.SendWebRequest();
-
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.Log(request.error);
@@ -75,10 +60,8 @@ public class HTTP_Test : MonoBehaviour
                 {
                     // Show results as text
                     string json = request.downloadHandler.text;
-                    Character character = JsonUtility.FromJson<Character>(json);
-                    Debug.Log(character.id + ":" + character.name + " is an " + character.species);
+                    Debug.Log(json);
 
-                    StartCoroutine(GetImage(character.image));
                 }
                 else
                 {
@@ -86,34 +69,35 @@ public class HTTP_Test : MonoBehaviour
                     mensaje += "\nError: " + request.error;
                     Debug.Log(mensaje);
                 }
-            }
-        }
-    }
 
-    IEnumerator GetImage(string imageUrl)
-    {
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(imageUrl);
-        yield return request.SendWebRequest();
-        if (request.result == UnityWebRequest.Result.ConnectionError)
-        {
-            Debug.Log(request.error);
+            }
         }
-        else
+        IEnumerator GetCharacter(int id, int index)
         {
-            if (request.responseCode == 200)
+            UnityWebRequest request = UnityWebRequest.Get(RicKandMortyUrl + id);
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
             {
-                // Show results as texture
+                Character character = JsonUtility.FromJson<Character>(request.downloadHandler.text);
+                nameLabels[index].text = character.name;
+                speciesLabels[index].text = character.species;
+                StartCoroutine(GetImage(character.image, index));
+            }
+        }
+
+        IEnumerator GetImage(string imageUrl, int index)
+        {
+            UnityWebRequest request = UnityWebRequestTexture.GetTexture(imageUrl);
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
                 Texture2D texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
-                Debug.Log("Image downloaded successfully");
-                imageChar1.style.backgroundImage = texture;
-            }
-            else
-            {
-                string mensaje = "status:" + request.responseCode;
-                mensaje += "\nError: " + request.error;
-                Debug.Log(mensaje);
+                imageChars[index].style.backgroundImage = new StyleBackground(texture);
             }
         }
+
     }
 }
 
