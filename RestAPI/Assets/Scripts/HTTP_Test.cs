@@ -23,6 +23,9 @@ public class HTTP_Test : MonoBehaviour
     private VisualElement[] imageChars;
     private Label[] nameLabels;
     private Label[] speciesLabels;
+    private Label userLabel;
+    private TextField userIdField;
+    private System.Random rnd = new System.Random();
 
     void Start()
     {
@@ -33,6 +36,8 @@ public class HTTP_Test : MonoBehaviour
         imageChars = new VisualElement[5];
         nameLabels = new Label[5];
         speciesLabels = new Label[5];
+        userLabel = uiDocument.rootVisualElement.Q<Label>("UserLabel");
+        userIdField = uiDocument.rootVisualElement.Q<TextField>("UserIdField");
 
         for (int i = 0; i < 5; i++)
         {
@@ -40,15 +45,17 @@ public class HTTP_Test : MonoBehaviour
             nameLabels[i] = uiDocument.rootVisualElement.Q($"CharacterName{i + 1}") as Label;
             speciesLabels[i] = uiDocument.rootVisualElement.Q($"CharacterSpecies{i + 1}") as Label;
         }
-
-        for (int i = 0; i < characterIds.Length; i++)
+        userIdField.RegisterValueChangedCallback(evt =>
         {
-            StartCoroutine(GetCharacter(characterIds[i], i));
-        }
+            if (int.TryParse(evt.newValue, out int userId))
+            {
+                StartCoroutine(GetUser(userId));
+            }
+        });
 
         IEnumerator GetUser(int userId)
         {
-            UnityWebRequest request = UnityWebRequest.Get(APIUrl + userId);
+            UnityWebRequest request = UnityWebRequest.Get(APIUrl + "/users/" +userId);
             yield return request.SendWebRequest();
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
@@ -60,7 +67,12 @@ public class HTTP_Test : MonoBehaviour
                 {
                     // Show results as text
                     string json = request.downloadHandler.text;
-                    Debug.Log(json);
+                    userLabel.text = json;
+                    for (int i = 0; i < characterIds.Length; i++)
+                    {
+                        characterIds[i] = rnd.Next(1, 826);
+                        StartCoroutine(GetCharacter(characterIds[i], i));
+                    }
 
                 }
                 else
